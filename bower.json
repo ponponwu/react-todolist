@@ -1,0 +1,21 @@
+{
+  "name": "react-todolist",
+  "authors": [
+    "ponpon <sheep0406@hotmail.com>"
+  ],
+  "description": "0.0.1",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.14.2"
+  }
+}
