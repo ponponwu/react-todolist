@@ -1,43 +1,86 @@
-var Todolist = React.createClass({
-  createItem: function(itemText){
-    return <li> {itemText} </li>
+/**@jsx React.DOM*/
 
-  },
-  render: function(){
-    return <ul>{this.props.items.map(this.createItem)}</ul>;
+var ToDo = React.createClass({
+  render: function() {
+    var defaultClass = 'callout';
+
+   //defaultClass += this.props.done ? ' callout-success' : ' callout-info';
+
+    return (
+      <div className={defaultClass}>
+        <span>{this.props.value}</span>
+        <i className='close' onClick={this.props.onClickClose}>&times;</i>
+      </div>
+    )
   }
-
 });
+  
+var ToDoList = React.createClass({
+  getInitialState: function() {
+    return {
+      todos: []
+    }
+  },
+  addTodo: function() {
+    var todos = this.state.todos;
 
-var TodoApp = React.createClass({
-  getInitialState: function(){
-    return {items: [], text: ''};
+    todos.push({
+      value: this.state.inputValue
+    });
+
+    this.setState({
+      todos: todos,
+      inputValue: ''
+    });
+
+    // Return false for form
+    return false;
   },
-  handleChange: function(e){
-    this.setState({text: e.target.value});
+  handleChange: function(e) {
+    this.setState({
+      inputValue: e.target.value
+    });
   },
-  handleSubmit: function(e){
-    e.preventDefault();
-    var nextItems = this.state.items.concat([this.state.text]);
-    var nextText = '';
-    this.setState({items: nextItems, text: nextText});
+  removeTodo: function(index) {
+    this.state.todos.splice(index, 1);
+
+    this.setState({
+      todos: this.state.todos
+    });
   },
-  render: function(){
-    return(
-      <div>
-        <h3>TodoList</h3>
-        <Todolist items={this.state.items} />
-        <form onSubmit={this.handleSubmit}>
-          <input onChange={this.handleChange} value = {this.state.text} />
-          <button class="btn btn-danger" >{'Add #' + (this.state.items.length+1)}</button>
-        </form>
+  render: function() {
+
+    var todos = this.state.todos.map(function(todo, index) {
+      return (
+        <ToDo
+        key={index}
+        value={todo.value}        
+        onClickClose={this.removeTodo.bind(this, index)}
+      /> );
+    }.bind(this));
+
+    return (
+      <div className='container'>
+        <div className='col-xs-6 col-xs-offset-3'>
+          <h1>My Todo List</h1>
+          {todos}
+          <form
+            onSubmit={this.addTodo}>
+            <div className='input-group'>
+              <input type='text' value={this.state.inputValue}
+                onChange={this.handleChange}
+                className='form-control'
+                placeholder='What do you need to do?'
+              />
+              <span className='input-group-btn'> 
+                <button className='btn btn-success'>Add Todo</button>
+              </span>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }
 });
 
-
-React.render(
-  <TodoApp />,
-  document.getElementById('app')
-);
+React.renderComponent(ToDoList(), document.getElementById('app'));
